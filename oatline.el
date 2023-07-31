@@ -50,8 +50,10 @@
   (unless (current-message)
     (let ((contents (funcall oatline-contents)))
       (with-current-buffer oatline--minibuf
-	(erase-buffer)
-	(insert contents)))))
+	;; prevent flicker from erase-buffer
+	(with-silent-modifications 
+	 (erase-buffer)
+	 (insert contents))))))
 
 (setq oatline--msg-timer
       (run-with-timer 0 0.1 'oatline--update-contents))
