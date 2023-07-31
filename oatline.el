@@ -3,15 +3,15 @@
 ;;; Commentary:
 
 ;; Read the source; it's short and simple. Customize via variable oatline-contents.
+;; Also provides utility functions to ease customization.
 
-;; Seeded by feebleline. 
+;; Seeded by feebleline, but significantly trimmed down.
 
 ;;; Code:
 
 (defcustom oatline-contents
   (lambda ()
-    "Default string with contents to show on the oatline"
-    "lok'tar ogar")
+    (format "%s" (buffer-name (current-buffer))))
   "Returns a string with contents to show on the oatline"
   :type 'function
   :group 'oatline)
@@ -47,13 +47,28 @@
 
 (defun oatline--update-contents ()
   "Insert (oatline-contents) into the oatline minibuffer."
-  ;; TODO what does this coditional do lol
   (unless (current-message)
-    (with-current-buffer oatline--minibuf
-      (erase-buffer)
-      (insert (funcall oatline-contents)))))
+    (let ((contents (funcall oatline-contents)))
+      (with-current-buffer oatline--minibuf
+	(erase-buffer)
+	(insert contents)))))
 
 (setq oatline--msg-timer
       (run-with-timer 0 0.1 'oatline--update-contents))
 
 (provide 'oatline)
+
+
+;;; Utility functions for user to use in their custom 'oatline-contents
+
+(defun oatline-format-left-and-right-aligned (left-contents right-contents)
+  "Given strings for left aligned and right aligned text,  return a single
+   string that uses the oatline minibuffer width to align them."
+  (let* ((echo-area-width (window-width (get-buffer-window oatline--minibuf)))
+         (available-width (- echo-area-width 1))
+         (left-width (length left-contents))
+         (right-width (length right-contents))
+         (total-width (+ left-width right-width)))
+    (concat left-contents
+            (make-string (max 0 (- available-width total-width)) ?\s)
+            right-contents)))
