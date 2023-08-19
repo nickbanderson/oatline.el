@@ -42,6 +42,7 @@
   (pcase window-system
     (`nil (oatline-set-defaults-for-rendering-in-terminal))
     (`x (oatline-set-defaults-for-rendering-in-gui))
+    (`w32 (oatline-set-defaults-for-rendering-in-gui))
     ;; TODO address other cases I encounter in the wild
     (_ (error "oatline: unmatched 'window-system value"))))
 
