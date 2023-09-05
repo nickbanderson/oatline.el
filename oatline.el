@@ -9,9 +9,7 @@
 
 ;;; Code:
 
-(defcustom oatline-contents
-  (lambda ()
-    (format "%s" (buffer-name (current-buffer))))
+(defcustom oatline-contents #'oatline-contents-preset-one
   "Returns a string with contents to show on the oatline"
   :type 'function
   :group 'oatline)
@@ -75,3 +73,37 @@
     (concat left-contents
             (make-string (max 0 (- available-width total-width)) ?\s)
             right-contents)))
+
+;;; Presets for 'oatline-contents
+
+(defun oatline-contents-preset-one ()
+  (oatline-format-left-and-right-aligned
+   ;; left aligned portion
+   (format "%s %s: %s%s"
+	   (pcase evil-state
+	     ('normal (propertize "[N]" 'face '(:foreground "lightgreen")))
+	     ('insert (propertize "[I]" 'face '(:foreground "cornflowerblue")))
+	     ('visual (propertize "[V]" 'face '(:foreground "violet")))
+	     ('motion (propertize "[M]" 'face '(:foreground "cyan")))
+	     ;; TODO this never displays
+	     ('replace (propertize "[R]" 'face '(:foreground "red")))
+	     ('emacs (propertize "[E]" 'face '(:foreground "yellow")))
+	     (_ "[_]"))
+	   (persp-name (persp-curr))
+	   ;; TODO add hostname and full filepath in gray?
+	   (buffer-name (current-buffer))
+	   (if (and (buffer-modified-p) (buffer-file-name))
+	       (propertize " [+]" 'face '(:foreground "orange"))
+	     "")
+	   )
+   ;; right aligned portion
+   (concat
+    ;; TODO make this a symbol or shorter or something prettier
+    (format "[%s]" (symbol-name major-mode))
+    "  "
+    (format "%d:%d" (line-number-at-pos) (current-column))
+    " "
+    (format "(%d%%)" (min 100 (* 100 (/ (float (line-number-at-pos))
+					(count-lines (point-min) (point-max))))))
+    )))
+
