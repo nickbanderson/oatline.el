@@ -21,7 +21,7 @@
   "Sets emacs settings for nil `window-system` (e.g. emacs running in terminal).
    Uses the mode-line itself as a border, setting its content to a horizontal line."
   (setq-default mode-line-format (make-string 500 ?─)) ; 500 width should fill up any bot border
-  (set-display-table-slot standard-display-table
+  (set-display-table-slot (make-display-table)
 			  'vertical-border 
 			  (make-glyph-code ?│)))
 
