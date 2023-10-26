@@ -79,7 +79,7 @@
 (defun oatline-contents-preset-one ()
   (oatline-format-left-and-right-aligned
    ;; left aligned portion
-   (format "%s %s: %s%s"
+   (format "%s %s: %s%s%s"
 	   (pcase evil-state
 	     ('normal (propertize "[N]" 'face '(:foreground "lightgreen")))
 	     ('insert (propertize "[I]" 'face '(:foreground "cornflowerblue")))
@@ -92,10 +92,12 @@
 	   (persp-name (persp-curr))
 	   ;; TODO add hostname and full filepath in gray?
 	   (buffer-name (current-buffer))
+	   ;; TODO make [+] and [R/O] mutually exclusive here once I'm sure that's the case
 	   (if (and (buffer-modified-p) (buffer-file-name))
 	       (propertize " [+]" 'face '(:foreground "orange"))
 	     "")
-	   )
+	   (when buffer-read-only
+	     (propertize " [R/O]" 'face '(:foreground "orange"))))
    ;; right aligned portion
    (concat
     ;; TODO make this a symbol or shorter or something prettier
