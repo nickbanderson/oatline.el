@@ -96,8 +96,9 @@
 	   (if (and (buffer-modified-p) (buffer-file-name))
 	       (propertize " [+]" 'face '(:foreground "orange"))
 	     "")
-	   (when buffer-read-only
-	     (propertize " [R/O]" 'face '(:foreground "orange"))))
+           (if buffer-read-only
+               (propertize " [R/O]" 'face '(:foreground "orange"))
+             ""))
    ;; right aligned portion
    (concat
     ;; TODO make this a symbol or shorter or something prettier
