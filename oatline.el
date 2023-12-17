@@ -25,7 +25,6 @@
 			  'vertical-border 
 			  (make-glyph-code ?│)))
 
-
 (defun oatline-set-defaults-for-rendering-in-gui ()
   "Sets emacs settings for 'x `window-system` (i.e. GUI emacs).
    Uses window-divider-mode, which is GUI-only."
@@ -54,8 +53,15 @@
 	 (erase-buffer)
 	 (insert contents))))))
 
-(setq oatline--msg-timer
-      (run-with-timer 0 0.1 'oatline--update-contents))
+(defvar oatline--msg-timer nil)
+
+(define-minor-mode global-oatline-echo-area-mode
+  "Display modeline in the echo area."
+  :init-value nil
+  :global t
+  (if global-oatline-echo-area-mode
+      (setq oatline--msg-timer (run-with-timer 0 0.1 'oatline--update-contents))
+    (cancel-timer oatline--msg-timer)))
 
 (provide 'oatline)
 
