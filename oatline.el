@@ -19,15 +19,15 @@
 
 (defun oatline-set-defaults-for-rendering-in-terminal ()
   "Sets emacs settings for nil `window-system` (e.g. emacs running in terminal).
-   Uses the mode-line itself as a border, setting its content to a horizontal line."
+Uses the mode-line itself as a border, setting its content to a horizontal line."
   (setq-default mode-line-format (make-string 500 ?─)) ; 500 width should fill up any bot border
   (set-display-table-slot standard-display-table
                           'vertical-border
                           (make-glyph-code ?│)))
 
 (defun oatline-set-defaults-for-rendering-in-gui ()
-  "Sets emacs settings for 'x `window-system` (i.e. GUI emacs).
-   Uses window-divider-mode, which is GUI-only."
+  "Sets emacs settings for GUI `window-system`.
+Uses window-divider-mode, which is GUI-only."
   (setq-default mode-line-format nil
 		window-divider-default-bottom-width 1
 		window-divider-default-places 'bottom-only)
@@ -35,7 +35,7 @@
 
 (defun oatline-set-defaults ()
   "Sets relevant emacs settings based on `window-system`.
-   See oatline-set-defaults-for-*."
+See oatline-set-defaults-for-*."
   (pcase window-system
     (`nil (oatline-set-defaults-for-rendering-in-terminal))
     (`x (oatline-set-defaults-for-rendering-in-gui))
@@ -70,7 +70,7 @@
 
 (defun oatline-format-left-and-right-aligned (left-contents right-contents)
   "Given strings for left aligned and right aligned text,  return a single
-   string that uses the oatline minibuffer width to align them."
+string that uses the oatline minibuffer width to align them."
   (let* ((echo-area-width (window-width (get-buffer-window oatline--minibuf)))
          (available-width (- echo-area-width 1))
          (left-width (length left-contents))
